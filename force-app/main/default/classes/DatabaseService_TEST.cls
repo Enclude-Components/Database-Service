@@ -1,32 +1,98 @@
 @IsTest
 public class DatabaseService_TEST {
-  @IsTest
-  static void doInsert_guardAgainstRemovedFields() {
-    User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('TestPermSet01');
-    createObjectPerm(ps.Id, 'Account');
-    assignPermSetToUser(minaccessUser, ps.Id);
-
-    System.runAs(minAccessUser) {
+    @IsTest
+    static void constructorChains() {
+      Test.startTest();
       DatabaseService db = new DatabaseService();
-      db.doInsert(
-        new Account(
-          Name = 'Test',
-          NumberOfEmployees = 3,
-          AccountSource = 'TradeShow'
-        )
+
+      System.AssertEquals(
+        System.AccessLevel.USER_MODE,
+        db.accessLevel,
+        'DatabaseService constructor set an unexpected value for "accessLevel"'
       );
-      // db.throwIfRemovedFields(true);
-      SObject[] records = db.doQuery(
-        'SELECT Id, NumberOfEmployees FROM Account'
+      System.AssertEquals(
+        false,
+        db.throwIfRemovedFields,
+        'DatabaseService constructor set an unexpected value for "throwIfRemovedfields"'
       );
-      System.debug('================================');
-      System.debug(records);
-      System.debug('================================');
-      System.debug('================================');
+      System.AssertEquals(
+        true,
+        db.dmlOptions.allowFieldTruncation,
+        'DatabaseService constructor set an unexpected value for "dmlOptions.allowFieldTruncation"'
+      );
+      System.AssertEquals(
+        true,
+        db.dmlOptions.optAllOrNone,
+        'DatabaseService constructor set an unexpected value for "dmlOptions.optAllOrNone"'
+      );
+
+      db.withAccessLevel(System.AccessLevel.SYSTEM_MODE);
+      System.AssertEquals(
+        System.AccessLevel.SYSTEM_MODE,
+        db.accessLevel,
+        'DatabaseService.withAccessLevel set an unexpected value'
+      );
+
+      db.allOrNone(false);
+      System.AssertEquals(
+        false,
+        db.dmlOptions.optAllOrNone,
+        'DatabaseService.withAccessLevel set an unexpected value'
+      );
+
+      db.throwIfRemovedFields(true);
+      System.AssertEquals(
+        true,
+        db.allFieldsRequired,
+        'DatabaseService.allFieldsRequired returned an unexpected value'
+      );
+      System.AssertEquals(
+        true,
+        db.throwIfRemovedFields,
+        'DatabaseService.throwIfRemovedFields set an unexpected value'
+      );
+      db.throwIfRemovedFields(false);
+
+      db.throwIfRemovedFields(
+        'Account',
+        new Set<String> {
+            'AccountNumber',
+            'AccountSource'
+        }
+      );
+      System.AssertEquals(
+        true,
+        db.throwIfRemovedFields,
+        'DatabaseService.throwIfRemovedFields set an unexpected value'
+      );
+      System.AssertEquals(
+        true,
+        db.requiredFieldsMap.containsKey('Account'),
+        'DatabaseService.throwIfRemovedFields set an unexpected value'
+      );
+      System.AssertEquals(
+        2,
+        db.requiredFieldsMap.get('Account').size(),
+        'DatabaseService.throwIfRemovedFields set an unexpected value'
+      );
+
+      try {
+        db.throwIfRemovedFields('Contact', new Set<String>());
+        System.assert(false, 'DatabaseService.throwIfRemovedFields should throw an IllegalArgumentException if passed empty args');
+      } catch (IllegalArgumentException e) {
+        System.assert(true, 'DatabaseService.throwIfRemovedFields should throw an IllegalArgumentException if passed empty args');
+      }
+
+      Database.DmlOptions opts = new Database.DmlOptions();
+      opts.AllowFieldTruncation = false;
+      db.withOptions(opts);
+      System.AssertEquals(
+        false,
+        db.dmlOptions.AllowFieldTruncation,
+        'DatabaseService.withOptions set an unexpected value'
+      );
     }
 
-  }
   /**
    * @description Creates a User and assigns the 'Minimum Access - Salesforce' profile
    * @param   doInsert    Boolean flag. Inserts User if true, otherwise just returns

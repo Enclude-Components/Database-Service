@@ -5,10 +5,10 @@
  *                      - accessLevel: `AccessLevel.USER_MODE`
  *                      - throwIfRemovedFields: `false` (Fields are silently removed)
  *                      - allowFieldTruncation: `true` (Fields are silently truncated if too long)
- *                      - optAllOrNone: `false` (Allows for partial success of DML operations)
+ *                      - optAllOrNone: `true` (Controles whether partial success of DML operations is allowed)
  * 
  * @example
- * ```java
+ * ```apex
   *     DatabaseService db = new DatabaseService()
  *         .withAccessLevel(System.AccessLevel.SYSTEM_MODE)
  *         .throwIfRemovedFields('Account', new Set<String>{'Industry'});
@@ -25,15 +25,16 @@ public inherited sharing class DatabaseService {
   @TestVisible
   private Database.DmlOptions dmlOptions;
   /**
-   * @description Returns true if all fields are required and none were specified in the requiredFieldsMap.
+   * @description Returns true if all fields are required and none were specified in the requiredFieldsMap
    */
+  @TestVisible
   private Boolean allFieldsRequired {
     get {
       return this.throwIfRemovedFields && this.requiredFieldsMap.isEmpty();
     }
   }
   /**
-   * @description Exception class to be thrown when critical fields are removed due to field-level security.
+   * @description Exception class to be thrown when critical fields are removed due to field-level security
    */
   public class RemovedFieldsException extends Exception {
   }
@@ -45,12 +46,12 @@ public inherited sharing class DatabaseService {
   public DatabaseService() {
     this.dmlOptions = new Database.DmlOptions();
     this.dmlOptions.allowFieldTruncation = true;
-    this.dmlOptions.optAllOrNone = false;
+    this.dmlOptions.optAllOrNone = true;
   }
   /**
-   * @description     Sets the allOrNone option for DML operations.
-   * @param           optAllOrNone - Boolean indicating whether the DML operation should succeed or fail as a whole.
-   * @return          This DatabaseService instance for method chaining.
+   * @description     Sets the allOrNone option for DML operations
+   * @param           optAllOrNone - Boolean indicating whether the DML operation should succeed or fail as a whole
+   * @return          This DatabaseService instance for method chaining
    */
   public DatabaseService allOrNone(Boolean optAllOrNone) {
     this.dmlOptions.optAllOrNone = optAllOrNone;
@@ -58,10 +59,10 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Configures the service to throw an exception if the specified fields are removed
-   *                  due to field-level security (FLS) restrictions.
-   * @param           objectApiName - The API name of the object whose fields are being checked.
-   * @param           requiredFieldApiNames - A set of field API names that are required for the object.
-   * @return          This DatabaseService instance for method chaining.
+   *                  due to field-level security (FLS) restrictions
+   * @param           objectApiName - The API name of the object whose fields are being checked
+   * @param           requiredFieldApiNames - A set of field API names that are required for the object
+   * @return          This DatabaseService instance for method chaining
    */
   public DatabaseService throwIfRemovedFields(
     String objectApiName,
@@ -81,28 +82,28 @@ public inherited sharing class DatabaseService {
     return this;
   }
   /**
-   * @description     Configures the service to throw an exception if any fields are removed due to FLS restrictions.
-   * @param           throwIfRemovedFields - Boolean indicating whether to throw if any field is removed.
-   * @return          This DatabaseService instance for method chaining.
+   * @description     Configures the service to throw an exception if any fields are removed due to FLS restrictions
+   * @param           throwIfRemovedFields - Boolean indicating whether to throw if any field is removed
+   * @return          This DatabaseService instance for method chaining
    */
   public DatabaseService throwIfRemovedFields(Boolean throwIfRemovedFields) {
     this.throwIfRemovedFields = true;
     return this;
   }
   /**
-   * @description     Sets custom DML options for this service.
-   * @param           dmlOptions - A Database.DmlOptions object to customize DML behavior (e.g., allow field truncation, allOrNone).
+   * @description     Sets custom DML options for this service
+   * @param           dmlOptions - A Database.DmlOptions object to customize DML behavior (e.g., allow field truncation, allOrNone)
    * @see             https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_database_dmloptions.htm
-   * @return          This DatabaseService instance for method chaining.
+   * @return          This DatabaseService instance for method chaining
    */
   public DatabaseService withOptions(Database.DmlOptions dmlOptions) {
     this.dmlOptions = dmlOptions;
     return this;
   }
   /**
-   * @description     Sets the access level for database operations (USER_MODE or SYSTEM_MODE).
-   * @param           accessLevel - The System.AccessLevel to be used for database operations.
-   * @return          This DatabaseService instance for method chaining.
+   * @description     Sets the access level for database operations (USER_MODE or SYSTEM_MODE)
+   * @param           accessLevel - The System.AccessLevel to be used for database operations
+   * @return          This DatabaseService instance for method chaining
    */
   public DatabaseService withAccessLevel(System.AccessLevel accessLevel) {
     this.accessLevel = accessLevel;
@@ -112,7 +113,7 @@ public inherited sharing class DatabaseService {
   // QUERY METHODS
   /**
    * @description     Executes a SOQL query
-   * @param           query - The SOQL query string to be executed.
+   * @param           query - The SOQL query string to be executed
    * @return          An array of SObjects results
    */
   public SObject[] doQuery(String query) {
@@ -122,8 +123,8 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Executes a SOQL query with bind variables
-   * @param           queries - The SOQL query string to be executed.
-   * @param           bindMap - A map of bind variables to be used in the query.
+   * @param           query - The SOQL query string to be executed
+   * @param           bindMap - A map of bind variables to be used in the query
    * @return          An array of SObjects results
    */
   public SObject[] doQueryWithBinds(String query, Map<String, Object> bindMap) {
@@ -139,7 +140,7 @@ public inherited sharing class DatabaseService {
   // INSERT METHODS
   /**
    * @description     Inserts a single record
-   * @param           record - The SObject to be inserted.
+   * @param           record - The SObject to be inserted
    * @return          Database.SaveResult
    */
   public Database.SaveResult doInsert(SObject record) {
@@ -148,7 +149,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Inserts multiple records
-   * @param           records - An array of SObjects to be inserted.
+   * @param           records - An array of SObjects to be inserted
    * @return          Database.SaveResult[]
    */
   public Database.SaveResult[] doInsert(SObject[] records) {
@@ -159,7 +160,7 @@ public inherited sharing class DatabaseService {
   // UPDATE METHODS
   /**
    * @description     Updates a single record
-   * @param           record - The SObject to be updated.
+   * @param           record - The SObject to be updated
    * @return          Database.SaveResult
    */
   public Database.SaveResult doUpdate(SObject record) {
@@ -168,7 +169,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Updates multiple records
-   * @param           records - An array of SObjects to be updated.
+   * @param           records - An array of SObjects to be updated
    * @return          Database.SaveResult[]
    */
   public Database.SaveResult[] doUpdate(SObject[] records) {
@@ -179,7 +180,7 @@ public inherited sharing class DatabaseService {
   // DELETE METHODS
   /**
    * @description     Deletes a single record
-   * @param           record - The SObject to be deleted.
+   * @param           record - The SObject to be deleted
    * @return          Database.SaveResult
    */
   public Database.DeleteResult doDelete(SObject record) {
@@ -187,7 +188,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Deletes multiple records
-   * @param           records - An array of SObjects to be deleted.
+   * @param           records - An array of SObjects to be deleted
    * @return          Database.SaveResult[]
    */
   public Database.DeleteResult[] doDelete(SObject[] records) {
@@ -197,7 +198,7 @@ public inherited sharing class DatabaseService {
   // UPSERT METHODS
   /**
    * @description     Upserts a single record, using Id as the upsert key
-   * @param           record - The SObject to be upserted.
+   * @param           record - The SObject to be upserted
    * @return          Database.UpsertResult
    */
   public Database.UpsertResult doUpsert(SObject record) {
@@ -206,7 +207,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Upserts a single record, using specified upsert key
-   * @param           records - An array of SObjects to be deleted.
+   * @param           record - The SObject to be upserted
    * @param           externalIdField - Field to use as upsert key
    * @return          Database.UpsertResult[]
    */
@@ -224,7 +225,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Upserts multiple records, using Id as the upsert key
-   * @param           records - An array of SObjects to be upserted.
+   * @param           records - An array of SObjects to be upserted
    * @return          Database.UpsertResult[]
    */
   public Database.UpsertResult[] doUpsert(SObject[] records) {
@@ -233,7 +234,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description     Upserts multiple records, using Id as the upsert key
-   * @param           records - An array of SObjects to be upserted.
+   * @param           records - An array of SObjects to be upserted
    * @param           externalIdField - Field to use as upsert key
    * @return          Database.UpsertResult[]
    */
