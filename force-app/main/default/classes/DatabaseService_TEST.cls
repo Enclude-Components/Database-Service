@@ -1,32 +1,33 @@
 @IsTest
 public class DatabaseService_TEST {
+  @IsTest
+  static void doInsert_guardAgainstRemovedFields() {
+    User minAccessUser = createMinAccessUser(true);
+    PermissionSet ps = createPermSet('TestPermSet01');
+    createObjectPerm(ps.Id, 'Account');
+    assignPermSetToUser(minaccessUser, ps.Id);
 
-    @IsTest
-    static void doInsert_guardAgainstRemovedFields() {
-
-        User minAccessUser = createMinAccessUser(true);
-        PermissionSet ps = createPermSet('TestPermSet01');
-        createObjectPerm(
-          ps.Id,
-          'Account'
-        );
-        assignPermSetToUser(minaccessUser, ps.Id);
-
-        System.runAs(minAccessUser) {
-            DatabaseService db = new DatabaseService();
-            db.doInsert(
-                new Account(Name = 'Test', NumberOfEmployees = 3, AccountSource = 'TradeShow')
-            );
-            // db.throwIfRemovedFields(true);
-            SObject[] records = db.doQuery('SELECT Id, NumberOfEmployees FROM Account');
-            System.debug('================================');
-            System.debug(records);
-            System.debug('================================');
-            System.debug('================================');
-        }
-
+    System.runAs(minAccessUser) {
+      DatabaseService db = new DatabaseService();
+      db.doInsert(
+        new Account(
+          Name = 'Test',
+          NumberOfEmployees = 3,
+          AccountSource = 'TradeShow'
+        )
+      );
+      // db.throwIfRemovedFields(true);
+      SObject[] records = db.doQuery(
+        'SELECT Id, NumberOfEmployees FROM Account'
+      );
+      System.debug('================================');
+      System.debug(records);
+      System.debug('================================');
+      System.debug('================================');
     }
-      /**
+
+  }
+  /**
    * @description Creates a User and assigns the 'Minimum Access - Salesforce' profile
    * @param   doInsert    Boolean flag. Inserts User if true, otherwise just returns
    * @return  `User`
