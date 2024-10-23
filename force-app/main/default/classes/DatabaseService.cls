@@ -37,6 +37,8 @@ public inherited sharing class DatabaseService {
    */
   public class RemovedFieldsException extends Exception {
   }
+
+  // CONSTRUCTOR AND CHAINING METHODS
   /**
    * @description Constructor
    */
