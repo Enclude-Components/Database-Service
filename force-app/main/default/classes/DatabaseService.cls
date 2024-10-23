@@ -6,6 +6,7 @@
  *                      - throwIfRemovedFields: `false` (Fields are silently removed)
  *                      - allowFieldTruncation: `true` (Fields are silently truncated if too long)
  *                      - optAllOrNone: `false` (Allows for partial success of DML operations)
+ * 
  * @example
  * ```java
   *     DatabaseService db = new DatabaseService()
@@ -250,8 +251,8 @@ public inherited sharing class DatabaseService {
   // UTILITY METHODS
   /**
    * @description		Strips inaccessible fields or throws an exception if throwIfRemovedFields flag is true
-   * @param			accessType - System.AccessType to use in security decision
-   * @param           record - SObject record whose fields should be guarded
+   * @param			    accessType - System.AccessType to use in security decision
+   * @param             record - SObject record whose fields should be guarded
    * @return			SObject record with fields stripped
    */
   private SObject guardAgainstRemovedFields(
@@ -263,8 +264,8 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description		Strips inaccessible fields or throws an exception if throwIfRemovedFields flag is true
-   * @param			accessType - System.AccessType to use in security decision
-   * @param           records - SObject[] records whose fields should be guarded
+   * @param			    accessType - System.AccessType to use in security decision
+   * @param             records - SObject[] records whose fields should be guarded
    * @return			SObject records with fields stripped
    */
   private SObject[] guardAgainstRemovedFields(
@@ -293,7 +294,7 @@ public inherited sharing class DatabaseService {
   }
   /**
    * @description		Returns a set of fully qualified API names of removed fields
-   * @param			removedFieldsMap - result of securityDecision.getRemovedFields()
+   * @param			    removedFieldsMap - result of securityDecision.getRemovedFields()
    * @return			Set of fully qualified API names of removed fields
    */
   private Set<String> getRemovedFieldSet(
