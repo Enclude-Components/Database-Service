@@ -1,0 +1,25 @@
+minimum_cumulusci_version: '3.90.0'
+project:
+    name: DatabaseService
+    package:
+        name: DatabaseService
+        api_version: '62.0'
+    git:
+        default_branch: 'main'
+    source_format: sfdx
+
+tasks:
+    robot:
+        options:
+            suites: robot/DatabaseService/tests
+            options:
+                outputdir: robot/DatabaseService/results
+
+    robot_testdoc:
+        options:
+            path: robot/DatabaseService/tests
+            output: robot/DatabaseService/doc/DatabaseService_tests.html
+
+    run_tests:
+        options:
+            required_org_code_coverage_percent: 75
