@@ -87,8 +87,15 @@ public inherited sharing class DatabaseService {
    * @return          This DatabaseService instance for method chaining
    */
   public DatabaseService throwIfRemovedFields(Boolean throwIfRemovedFields) {
-    this.throwIfRemovedFields = true;
+    this.throwIfRemovedFields = throwIfRemovedFields;
     return this;
+  }
+  /**
+   * @description     Configures the service to throw an exception if any fields are removed due to FLS restrictions
+   * @return          This DatabaseService instance for method chaining
+   */
+  public DatabaseService throwIfRemovedFields() {
+    return throwIfRemovedFields(true);
   }
   /**
    * @description     Sets custom DML options for this service
