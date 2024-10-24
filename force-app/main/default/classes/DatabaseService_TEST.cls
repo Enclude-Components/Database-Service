@@ -1,5 +1,7 @@
 @IsTest
-@SuppressWarnings('PMD.MethodNamingConventions,PMD.ExcessiveParameterList')
+@SuppressWarnings(
+  'PMD.MethodNamingConventions,PMD.ExcessiveParameterList,PMD.CyclomaticComplexity'
+)
 public class DatabaseService_TEST {
   @IsTest
   static void constructorChains() {
@@ -157,7 +159,7 @@ public class DatabaseService_TEST {
       DatabaseService db = new DatabaseService().throwIfRemovedFields();
 
       try {
-        SObject[] results = db.doQuery(getTestAccountQuery(testAccount.Id));
+        db.doQuery(getTestAccountQuery(testAccount.Id));
         System.assert(
           false,
           'DatabaseService.doQuery should have thrown a RemovedFieldsException'
@@ -344,7 +346,7 @@ public class DatabaseService_TEST {
       );
 
       try {
-        Database.SaveResult result = db.doInsert(acc);
+        db.doInsert(acc);
         System.assert(false, 'Should have thrown RemovedFieldsException');
       } catch (DatabaseService.RemovedFieldsException e) {
         String errorMsg = e.getMessage();
@@ -373,7 +375,7 @@ public class DatabaseService_TEST {
       );
 
       try {
-        Database.SaveResult result = db.doInsert(acc);
+        db.doInsert(acc);
         System.assert(false, 'Should have thrown NoAccessException');
       } catch (NoAccessException e) {
         System.assertNotEquals(null, e, 'Should have thrown NoAccessException');
