@@ -1,5 +1,5 @@
 # Database Service Class
-A wrapper class for the system Database class. Allows for database operations to be mocked in unit tests.
+A wrapper class for the system Database class which is secure by default. Also allows for database operations to be mocked in unit tests.
 
 ## Deploy
 
