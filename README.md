@@ -66,8 +66,8 @@ Database.SaveResult[] bulkResult = db.doUpdate(myUpdatedRecordList);
 ```java
 // Delete Methods
 DatabaseService db = new DatabaseService();
-Database.DeleteResult singleResult = db.doUpdate(myDeletedRecord);
-Database.DeleteResult[] bulkResult = db.doUpdate(myDeletedRecordList);
+Database.DeleteResult singleResult = db.doDelete(myDeletedRecord);
+Database.DeleteResult[] bulkResult = db.doDelete(myDeletedRecordList);
 ```
 ```java
 // Upsert Methods
