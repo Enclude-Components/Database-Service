@@ -9,13 +9,13 @@
  * 
  * @example
  * ```apex
-  *     DatabaseService db = new DatabaseService()
+  *     Safely db = new Safely()
  *         .withAccessLevel(System.AccessLevel.SYSTEM_MODE)
  *         .throwIfRemovedFields('Account', new Set<String>{'Industry'});
  * ```
 
  */
-public inherited sharing class DatabaseService {
+public inherited sharing class Safely {
   @TestVisible
   private System.AccessLevel accessLevel = System.AccessLevel.USER_MODE;
   @TestVisible
@@ -43,7 +43,7 @@ public inherited sharing class DatabaseService {
   /**
    * @description Constructor
    */
-  public DatabaseService() {
+  public Safely() {
     this.dmlOptions = new Database.DmlOptions();
     this.dmlOptions.allowFieldTruncation = true;
     this.dmlOptions.optAllOrNone = true;
@@ -51,20 +51,34 @@ public inherited sharing class DatabaseService {
   /**
    * @description     Sets the allOrNone option for DML operations
    * @param           optAllOrNone - Boolean indicating whether the DML operation should succeed or fail as a whole
-   * @return          This DatabaseService instance for method chaining
-   */
-  public DatabaseService allOrNone(Boolean optAllOrNone) {
+   * @return          This Safely instance for method chaining
+  */
+  public Safely allOrNone(Boolean optAllOrNone) {
     this.dmlOptions.optAllOrNone = optAllOrNone;
     return this;
+  }
+  /**
+   * @description		Alias for allOrNone, for backwards compatibility with older versions
+   * @return			  This Safely instance for method chaining
+  */
+  public Safely allOrNothing() {
+    return this.allOrNone();
+  }
+  /**
+   * @description     Sets the allOrNone option to true for DML operations
+   * @return          This Safely instance for method chaining
+  */
+  public Safely allOrNone() {
+    return this.allOrNone(true);
   }
   /**
    * @description     Configures the service to throw an exception if the specified fields are removed
    *                  due to field-level security (FLS) restrictions
    * @param           objectApiName - The API name of the object whose fields are being checked
    * @param           requiredFieldApiNames - A set of field API names that are required for the object
-   * @return          This DatabaseService instance for method chaining
+   * @return          This Safely instance for method chaining
    */
-  public DatabaseService throwIfRemovedFields(
+  public Safely throwIfRemovedFields(
     String objectApiName,
     Set<String> requiredFieldApiNames
   ) {
@@ -84,35 +98,35 @@ public inherited sharing class DatabaseService {
   /**
    * @description     Configures the service to throw an exception if any fields are removed due to FLS restrictions
    * @param           throwIfRemovedFields - Boolean indicating whether to throw if any field is removed
-   * @return          This DatabaseService instance for method chaining
+   * @return          This Safely instance for method chaining
    */
-  public DatabaseService throwIfRemovedFields(Boolean throwIfRemovedFields) {
+  public Safely throwIfRemovedFields(Boolean throwIfRemovedFields) {
     this.throwIfRemovedFields = throwIfRemovedFields;
     return this;
   }
   /**
    * @description     Configures the service to throw an exception if any fields are removed due to FLS restrictions
-   * @return          This DatabaseService instance for method chaining
+   * @return          This Safely instance for method chaining
    */
-  public DatabaseService throwIfRemovedFields() {
+  public Safely throwIfRemovedFields() {
     return throwIfRemovedFields(true);
   }
   /**
    * @description     Sets custom DML options for this service
    * @param           dmlOptions - A Database.DmlOptions object to customize DML behavior (e.g., allow field truncation, allOrNone)
    * @see             https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_methods_system_database_dmloptions.htm
-   * @return          This DatabaseService instance for method chaining
+   * @return          This Safely instance for method chaining
    */
-  public DatabaseService withOptions(Database.DmlOptions dmlOptions) {
+  public Safely withOptions(Database.DmlOptions dmlOptions) {
     this.dmlOptions = dmlOptions;
     return this;
   }
   /**
    * @description     Sets the access level for database operations (USER_MODE or SYSTEM_MODE)
    * @param           accessLevel - The System.AccessLevel to be used for database operations
-   * @return          This DatabaseService instance for method chaining
+   * @return          This Safely instance for method chaining
    */
-  public DatabaseService withAccessLevel(System.AccessLevel accessLevel) {
+  public Safely withAccessLevel(System.AccessLevel accessLevel) {
     this.accessLevel = accessLevel;
     return this;
   }
