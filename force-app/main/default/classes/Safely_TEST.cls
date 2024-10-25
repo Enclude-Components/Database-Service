@@ -2,57 +2,64 @@
 @SuppressWarnings(
   'PMD.MethodNamingConventions,PMD.ExcessiveParameterList,PMD.CyclomaticComplexity'
 )
-public class DatabaseService_TEST {
+public class Safely_TEST {
   @IsTest
   static void constructorChains() {
     Test.startTest();
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
 
     System.AssertEquals(
       System.AccessLevel.USER_MODE,
       db.accessLevel,
-      'DatabaseService constructor set an unexpected value for "accessLevel"'
+      'Safely constructor set an unexpected value for "accessLevel"'
     );
     System.AssertEquals(
       false,
       db.throwIfRemovedFields,
-      'DatabaseService constructor set an unexpected value for "throwIfRemovedfields"'
+      'Safely constructor set an unexpected value for "throwIfRemovedfields"'
     );
     System.AssertEquals(
       true,
       db.dmlOptions.allowFieldTruncation,
-      'DatabaseService constructor set an unexpected value for "dmlOptions.allowFieldTruncation"'
+      'Safely constructor set an unexpected value for "dmlOptions.allowFieldTruncation"'
     );
     System.AssertEquals(
       true,
       db.dmlOptions.optAllOrNone,
-      'DatabaseService constructor set an unexpected value for "dmlOptions.optAllOrNone"'
+      'Safely constructor set an unexpected value for "dmlOptions.optAllOrNone"'
     );
 
     db.withAccessLevel(System.AccessLevel.SYSTEM_MODE);
     System.AssertEquals(
       System.AccessLevel.SYSTEM_MODE,
       db.accessLevel,
-      'DatabaseService.withAccessLevel set an unexpected value'
+      'Safely.withAccessLevel set an unexpected value'
     );
 
     db.allOrNone(false);
     System.AssertEquals(
       false,
       db.dmlOptions.optAllOrNone,
-      'DatabaseService.withAccessLevel set an unexpected value'
+      'Safely.withAccessLevel set an unexpected value'
+    );
+
+    db.allOrNothing();
+    System.AssertEquals(
+      true,
+      db.dmlOptions.optAllOrNone,
+      'Safely.withAccessLevel set an unexpected value'
     );
 
     db.throwIfRemovedFields();
     System.AssertEquals(
       true,
       db.allFieldsRequired,
-      'DatabaseService.allFieldsRequired returned an unexpected value'
+      'Safely.allFieldsRequired returned an unexpected value'
     );
     System.AssertEquals(
       true,
       db.throwIfRemovedFields,
-      'DatabaseService.throwIfRemovedFields set an unexpected value'
+      'Safely.throwIfRemovedFields set an unexpected value'
     );
     db.throwIfRemovedFields(false);
 
@@ -63,29 +70,29 @@ public class DatabaseService_TEST {
     System.AssertEquals(
       true,
       db.throwIfRemovedFields,
-      'DatabaseService.throwIfRemovedFields set an unexpected value'
+      'Safely.throwIfRemovedFields set an unexpected value'
     );
     System.AssertEquals(
       true,
       db.requiredFieldsMap.containsKey('Account'),
-      'DatabaseService.throwIfRemovedFields set an unexpected value'
+      'Safely.throwIfRemovedFields set an unexpected value'
     );
     System.AssertEquals(
       2,
       db.requiredFieldsMap.get('Account').size(),
-      'DatabaseService.throwIfRemovedFields set an unexpected value'
+      'Safely.throwIfRemovedFields set an unexpected value'
     );
 
     try {
       db.throwIfRemovedFields('Contact', new Set<String>());
       System.assert(
         false,
-        'DatabaseService.throwIfRemovedFields should throw an IllegalArgumentException if passed empty args'
+        'Safely.throwIfRemovedFields should throw an IllegalArgumentException if passed empty args'
       );
     } catch (IllegalArgumentException e) {
       System.assert(
         true,
-        'DatabaseService.throwIfRemovedFields should throw an IllegalArgumentException if passed empty args'
+        'Safely.throwIfRemovedFields should throw an IllegalArgumentException if passed empty args'
       );
     }
 
@@ -95,7 +102,7 @@ public class DatabaseService_TEST {
     System.AssertEquals(
       false,
       db.dmlOptions.AllowFieldTruncation,
-      'DatabaseService.withOptions set an unexpected value'
+      'Safely.withOptions set an unexpected value'
     );
   }
 
@@ -106,7 +113,7 @@ public class DatabaseService_TEST {
     Test.startTest();
     Account testAccount = createTestAccount(minAccessUser.Id);
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService()
+      Safely db = new Safely()
         .withAccessLevel(System.AccessLevel.SYSTEM_MODE);
 
       SObject[] results = db.doQuery(getTestAccountQuery(testAccount.Id));
@@ -124,14 +131,14 @@ public class DatabaseService_TEST {
   @IsTest
   static void doQuery_UserModeStrippedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(ps.Id, 'Account', new Set<CrudType>{ CrudType.READ });
     assignPermSetToUser(minAccessUser, ps.Id);
     Account testAccount = createTestAccount(minAccessUser.Id);
 
     Test.startTest();
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService();
+      Safely db = new Safely();
 
       SObject[] results = db.doQuery(getTestAccountQuery(testAccount.Id));
 
@@ -149,22 +156,22 @@ public class DatabaseService_TEST {
   @IsTest
   static void doQuery_UserModeThrowIfRemovedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(ps.Id, 'Account', new Set<CrudType>{ CrudType.READ });
     assignPermSetToUser(minAccessUser, ps.Id);
 
     Test.startTest();
     Account testAccount = createTestAccount(minAccessUser.Id);
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService().throwIfRemovedFields();
+      Safely db = new Safely().throwIfRemovedFields();
 
       try {
         db.doQuery(getTestAccountQuery(testAccount.Id));
         System.assert(
           false,
-          'DatabaseService.doQuery should have thrown a RemovedFieldsException'
+          'Safely.doQuery should have thrown a RemovedFieldsException'
         );
-      } catch (DatabaseService.RemovedFieldsException e) {
+      } catch (Safely.RemovedFieldsException e) {
         String errorMsg = e.getMessage();
         System.assert(
           errorMsg.contains('Account.Industry'),
@@ -177,7 +184,7 @@ public class DatabaseService_TEST {
   }
   @IsTest
   static void doQueryWithBinds() {
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
     Account testAccount = createTestAccount(UserInfo.getUserId());
 
     SObject[] results = db.doQueryWithBinds(
@@ -194,7 +201,7 @@ public class DatabaseService_TEST {
 
     Test.startTest();
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService()
+      Safely db = new Safely()
         .withAccessLevel(System.AccessLevel.SYSTEM_MODE);
 
       Account acc = new Account(
@@ -225,7 +232,7 @@ public class DatabaseService_TEST {
   @IsTest
   static void doInsert_UserModeWithPermissions() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(
       ps.Id,
       'Account',
@@ -241,7 +248,7 @@ public class DatabaseService_TEST {
 
     Test.startTest();
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService();
+      Safely db = new Safely();
 
       Account acc = new Account(
         Name = 'Test Account',
@@ -274,7 +281,7 @@ public class DatabaseService_TEST {
   @IsTest
   static void doInsert_UserModeStrippedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(
       ps.Id,
       'Account',
@@ -291,7 +298,7 @@ public class DatabaseService_TEST {
 
     Test.startTest();
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService();
+      Safely db = new Safely();
 
       Account acc = new Account(
         Name = 'Test Account',
@@ -320,7 +327,7 @@ public class DatabaseService_TEST {
   @IsTest
   static void doInsert_UserModeThrowOnStrippedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(
       ps.Id,
       'Account',
@@ -336,7 +343,7 @@ public class DatabaseService_TEST {
 
     Test.startTest();
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService()
+      Safely db = new Safely()
         .throwIfRemovedFields('Account', new Set<String>{ 'Rating' });
 
       Account acc = new Account(
@@ -348,7 +355,7 @@ public class DatabaseService_TEST {
       try {
         db.doInsert(acc);
         System.assert(false, 'Should have thrown RemovedFieldsException');
-      } catch (DatabaseService.RemovedFieldsException e) {
+      } catch (Safely.RemovedFieldsException e) {
         String errorMsg = e.getMessage();
         System.assert(
           errorMsg.contains('Account.Rating'),
@@ -365,7 +372,7 @@ public class DatabaseService_TEST {
 
     Test.startTest();
     System.runAs(minAccessUser) {
-      DatabaseService db = new DatabaseService()
+      Safely db = new Safely()
         .throwIfRemovedFields('Account', new Set<String>{ 'Rating' });
 
       Account acc = new Account(
@@ -386,7 +393,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doInsert_BulkInsert() {
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
 
     Account[] accounts = new List<Account>{
       new Account(Name = 'Test Account 1'),
@@ -403,7 +410,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doUpdate_SingleRecord() {
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
 
     Account testAccount = createTestAccount(UserInfo.getUserId());
     testAccount.Name = 'Updated Account';
@@ -419,7 +426,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doUpdate_BulkUpdate() {
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
     Account[] testAccounts = new List<Account>{
       createTestAccount(UserInfo.getUserId())
     };
@@ -438,7 +445,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doDelete_SingleRecord() {
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
     Account testAccount = createTestAccount(UserInfo.getUserId());
 
     Database.DeleteResult result = db.doDelete(testAccount);
@@ -453,7 +460,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doDelete_BulkDelete() {
-    DatabaseService db = new DatabaseService();
+    Safely db = new Safely();
     Account[] testAccounts = new List<Account>{
       createTestAccount(UserInfo.getUserId())
     };
@@ -474,7 +481,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doUpsert_SingleRecordWithoutExternalId() {
-    DatabaseService db = new DatabaseService()
+    Safely db = new Safely()
       .withAccessLevel(System.AccessLevel.USER_MODE);
 
     Account testAccount = new Account(Name = 'Test Account');
@@ -491,7 +498,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doUpsert_SingleRecordWithExternalId() {
-    DatabaseService db = new DatabaseService()
+    Safely db = new Safely()
       .withAccessLevel(System.AccessLevel.USER_MODE);
 
     Account testAccount = new Account(Name = 'Test Account');
@@ -508,7 +515,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doUpsert_BulkWithoutExternalId() {
-    DatabaseService db = new DatabaseService()
+    Safely db = new Safely()
       .withAccessLevel(System.AccessLevel.USER_MODE);
 
     Account[] testAccounts = new List<Account>{
@@ -522,7 +529,7 @@ public class DatabaseService_TEST {
 
   @IsTest
   static void doUpsert_BulkWithExternalId() {
-    DatabaseService db = new DatabaseService()
+    Safely db = new Safely()
       .withAccessLevel(System.AccessLevel.USER_MODE);
 
     Account[] testAccounts = new List<Account>{

@@ -7,9 +7,6 @@
 *.pyc
 __pycache__
 
-# Robot Framework results
-robot/DatabaseService/results/
-
 # Salesforce cache
 .sf/
 .sfdx/
