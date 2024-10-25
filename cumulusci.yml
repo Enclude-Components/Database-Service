@@ -1,8 +1,8 @@
 minimum_cumulusci_version: '3.90.0'
 project:
-    name: DatabaseService
+    name: Safely
     package:
-        name: DatabaseService
+        name: Safely
         api_version: '62.0'
     git:
         default_branch: 'main'

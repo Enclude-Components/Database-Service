@@ -131,7 +131,7 @@ public class Safely_TEST {
   @IsTest
   static void doQuery_UserModeStrippedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(ps.Id, 'Account', new Set<CrudType>{ CrudType.READ });
     assignPermSetToUser(minAccessUser, ps.Id);
     Account testAccount = createTestAccount(minAccessUser.Id);
@@ -156,7 +156,7 @@ public class Safely_TEST {
   @IsTest
   static void doQuery_UserModeThrowIfRemovedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(ps.Id, 'Account', new Set<CrudType>{ CrudType.READ });
     assignPermSetToUser(minAccessUser, ps.Id);
 
@@ -232,7 +232,7 @@ public class Safely_TEST {
   @IsTest
   static void doInsert_UserModeWithPermissions() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(
       ps.Id,
       'Account',
@@ -281,7 +281,7 @@ public class Safely_TEST {
   @IsTest
   static void doInsert_UserModeStrippedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(
       ps.Id,
       'Account',
@@ -327,7 +327,7 @@ public class Safely_TEST {
   @IsTest
   static void doInsert_UserModeThrowOnStrippedFields() {
     User minAccessUser = createMinAccessUser(true);
-    PermissionSet ps = createPermSet('DB_Service_Test');
+    PermissionSet ps = createPermSet('Safely_Test');
     createObjectPerm(
       ps.Id,
       'Account',
