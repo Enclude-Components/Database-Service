@@ -14,7 +14,8 @@
  *         .throwIfRemovedFields('Account', new Set<String>{'Industry'});
  * ```
 
- */
+*/
+@SuppressWarnings('PMD.ExcessivePublicCount')
 public inherited sharing class Safely {
   @TestVisible
   private System.AccessLevel accessLevel = System.AccessLevel.USER_MODE;
@@ -52,7 +53,7 @@ public inherited sharing class Safely {
    * @description     Sets the allOrNone option for DML operations
    * @param           optAllOrNone - Boolean indicating whether the DML operation should succeed or fail as a whole
    * @return          This Safely instance for method chaining
-  */
+   */
   public Safely allOrNone(Boolean optAllOrNone) {
     this.dmlOptions.optAllOrNone = optAllOrNone;
     return this;
@@ -60,14 +61,14 @@ public inherited sharing class Safely {
   /**
    * @description		Alias for allOrNone, for backwards compatibility with older versions
    * @return			  This Safely instance for method chaining
-  */
+   */
   public Safely allOrNothing() {
     return this.allOrNone();
   }
   /**
    * @description     Sets the allOrNone option to true for DML operations
    * @return          This Safely instance for method chaining
-  */
+   */
   public Safely allOrNone() {
     return this.allOrNone(true);
   }
